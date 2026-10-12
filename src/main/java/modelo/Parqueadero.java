@@ -70,11 +70,7 @@ public class Parqueadero {
     return minutos / 60.0;
 }
     
-    public void mostrarTiquetes(){
-        int id=0;
-        for (Tiquete t: listaTiquetes){
-            id++;
-            System.out.println("Tiquete #"+id);
+    public void imprimirTiquete(Tiquete t){
             System.out.println("Usuario: "+t.getUsuario().getNombre());
             System.out.println("ID: "+t.getIdTiquete());
             //System.out.println("Vehiculo: "+t.getVehiculo().getPlaca());
@@ -84,6 +80,14 @@ public class Parqueadero {
             System.out.println("Hora de salida: " + (t.getFechaHoraSalida() != null ? t.getFechaHoraSalida().format(formato) : "N/A"));
             System.out.println("-----------");
             System.out.println("Total: "+ horasTiquete(t) * tarifaPorHora + " COP");
+    }
+    
+    public void mostrarTiquetes(){
+        int id=0;
+        for (Tiquete t: listaTiquetes){
+            id++;
+            System.out.println("Tiquete #"+id);
+            imprimirTiquete(t);
         }
     }
     
@@ -163,6 +167,22 @@ public class Parqueadero {
             }
          }
      return null;
+    }
+   
+    public void mostrarInfoTiquete(int idTiquete){
+        Tiquete t = buscarTiquete(idTiquete);
+        if(t != null){
+            imprimirTiquete(t);
+        }
+        System.out.println("El Tiquete con ID " + idTiquete + " no se encuentra actualmente en el parqueadero."); 
+    }
+    
+    public void mostrarInfoTiquete(String idPersona){
+        Tiquete t = buscarTiquete(idPersona);
+        if(t != null){
+            imprimirTiquete(t);
+        }
+        System.out.println("La persona con ID " + idPersona + " no tiene tiquetes actualmente en el parqueadero."); 
     }
     
 }
