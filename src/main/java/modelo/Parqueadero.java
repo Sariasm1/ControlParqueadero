@@ -57,6 +57,11 @@ public class Parqueadero {
         return espaciosOcupados.contains(espacio);
     }
     
+    public boolean verificarTiquete(Tiquete t){
+        return listaTiquetes.contains(t);
+    }
+    
+    
     public double horasTiquete(Tiquete t) {
     if (t.getFechaHoraSalida() == null) {
         return 0.0;
@@ -88,7 +93,7 @@ public class Parqueadero {
             return;
         }
         
-        if (listaTiquetes.contains(t)) {
+        if (verificarTiquete(t)) {
             System.out.println("El Tiquete con ID " + t.getIdTiquete() + " ya se encuentra registrado.");
             return;
         }
@@ -104,7 +109,7 @@ public class Parqueadero {
     }
     
     public void registrarSalida(Tiquete t){
-        if (!listaTiquetes.contains(t)) {
+        if (!verificarTiquete(t)) {
             System.out.println("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
             return;
         }
@@ -132,17 +137,32 @@ public class Parqueadero {
  }
     
     public void removerTiquete(int idTiquete){
-      for (Tiquete t : listaTiquetes) {
-         if (t.getIdTiquete() == idTiquete) { 
-             listaTiquetes.remove(t);
-             System.out.println("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
-             return;
-         }
-     }
-     System.out.println("No se encontró ningún Tiquete con ID "+ idTiquete);
+      Tiquete t = buscarTiquete(idTiquete);
+      if(t != null){
+         listaTiquetes.remove(t);
+         System.out.println("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
+         return;
+      }
+      System.out.println("No se encontró ningún Tiquete con ID "+ idTiquete);
     }
     
     
+    public Tiquete buscarTiquete(int idTiquete){
+        for (Tiquete t : listaTiquetes) {
+         if (t.getIdTiquete() == idTiquete) { 
+             return t;
+            }
+         }
+     return null;
+    }
     
+    public Tiquete buscarTiquete(String idPersona){
+     for (Tiquete t : listaTiquetes) {
+         if (t.getUsuario().getId().matches(idPersona)) { 
+             return t;
+            }
+         }
+     return null;
+    }
     
 }
