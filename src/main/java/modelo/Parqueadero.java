@@ -71,6 +71,8 @@ public class Parqueadero {
 }
     
     public void imprimirTiquete(Tiquete t){
+            double costoBase = horasTiquete(t) * tarifaPorHora;
+            double descuento = costoBase * t.getUsuario().obtenerDescuento();
             System.out.println("Usuario: "+t.getUsuario().getNombre());
             System.out.println("ID: "+t.getIdTiquete());
             //System.out.println("Vehiculo: "+t.getVehiculo().getPlaca());
@@ -78,8 +80,10 @@ public class Parqueadero {
             System.out.println("Espacio ocupado: "+(t.getEspacioOcupado() != null ? t.getEspacioOcupado() : "N/A"));
             System.out.println("Hora de ingreso: "+ t.getFechaHoraEntrada().format(formato));
             System.out.println("Hora de salida: " + (t.getFechaHoraSalida() != null ? t.getFechaHoraSalida().format(formato) : "N/A"));
+            System.out.println("Descuento: " + descuento + " (" + t.getUsuario().obtenerDescuento() * 100 + "%)");
             System.out.println("-----------");
-            System.out.println("Total: "+ horasTiquete(t) * tarifaPorHora + " COP");
+            System.out.println("Total: "+ costoBase + " COP");
+            System.out.println("Descuento aplicado: " + (costoBase - descuento));
     }
     
     public void mostrarTiquetes(){
@@ -172,7 +176,9 @@ public class Parqueadero {
     public void mostrarInfoTiquete(int idTiquete){
         Tiquete t = buscarTiquete(idTiquete);
         if(t != null){
+            System.out.println("Tiquete con ID de " + idTiquete);
             imprimirTiquete(t);
+            return;
         }
         System.out.println("El Tiquete con ID " + idTiquete + " no se encuentra actualmente en el parqueadero."); 
     }
@@ -180,9 +186,18 @@ public class Parqueadero {
     public void mostrarInfoTiquete(String idPersona){
         Tiquete t = buscarTiquete(idPersona);
         if(t != null){
+            System.out.println("Tiquete de persona con ID " + idPersona);
             imprimirTiquete(t);
+            return;
         }
         System.out.println("La persona con ID " + idPersona + " no tiene tiquetes actualmente en el parqueadero."); 
     }
     
+    public void pagarTiquete(Tiquete t){
+        if (!verificarTiquete(t)) {
+            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
+            return;
+        }
+        t.setEstado("Inactivo");
+    }
 }

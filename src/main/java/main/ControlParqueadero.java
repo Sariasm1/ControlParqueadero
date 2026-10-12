@@ -21,5 +21,7 @@ public class ControlParqueadero {
         //
         pUDC.registrarSalida(t1);
         pUDC.mostrarTiquetes();
+        pUDC.pagarTiquete(t1);
+        pUDC.mostrarInfoTiquete("123");
     }
 }
