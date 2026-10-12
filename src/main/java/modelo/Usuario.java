@@ -8,13 +8,13 @@ package modelo;
  *
  * @author santi
  */
-public abstract class usuario {
+public abstract class Usuario {
     private String nombre;
     private String celular;
     private String correo;
     private String id;
 
-    public usuario(String nombre, String celular, String correo, String id) {
+    public Usuario(String nombre, String celular, String correo, String id) {
         this.nombre = nombre;
         this.celular = celular;
         this.correo = correo;
