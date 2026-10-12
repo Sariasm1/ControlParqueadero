@@ -24,7 +24,7 @@ public class Tiquete {
         this.usuario = usuario;
        // this.vehiculo = vehiculo;
         this.activo = true;
-        this.estado = "Pendiente";
+        this.estado = "Activo";
     }
 
     public int getIdTiquete() {
@@ -84,8 +84,10 @@ public class Tiquete {
     public void setVehiculo(Vehiculo vehiculo) {
         this.vehiculo = vehiculo;
     }
+     * @return 
     **/
 
+    
     public String getEstado() {
         return estado;
     }

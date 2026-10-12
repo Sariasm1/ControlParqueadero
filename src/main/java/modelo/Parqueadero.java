@@ -6,6 +6,7 @@ package modelo;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -13,20 +14,23 @@ import java.time.Duration;
  */
 public class Parqueadero {
     private ArrayList<Tiquete> listaTiquetes;
+    private ArrayList<String> espaciosDisponibles;
     private ArrayList<String> espaciosOcupados;
     private String nombre;
     private double tarifaPorHora;
-    private int espaciosDisponibles;
-    private int espaciosTotales;
+    private static final int espaciosTotales = 5; 
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    public Parqueadero(String nombre, double tarifaPorHora, int espaciosTotales) {
+    public Parqueadero(String nombre, double tarifaPorHora) {
         this.nombre = nombre;
         this.tarifaPorHora = tarifaPorHora;
-        this.espaciosTotales = espaciosTotales;
-        this.espaciosDisponibles = espaciosTotales;
         this.listaTiquetes = new ArrayList<>();
         this.espaciosOcupados = new ArrayList<>();
+        this.espaciosDisponibles = new ArrayList<>();
+        
+        for (int i = 1; i <= espaciosTotales; i++) {
+            this.espaciosDisponibles.add("A-" + i);
+        }
     }
 
     public void setEspaciosOcupados(ArrayList<String> espaciosOcupados) {
@@ -48,28 +52,15 @@ public class Parqueadero {
     public void setTarifaPorHora(double tarifaPorHora) {
         this.tarifaPorHora = tarifaPorHora;
     }
-
-    public int getEspaciosDisponibles() {
-        return espaciosDisponibles;
-    }
-
-    public void setEspaciosDisponibles(int espaciosDisponibles) {
-        this.espaciosDisponibles = espaciosDisponibles;
-    }
-
-    public int getEspaciosTotales() {
-        return espaciosTotales;
-    }
-
-    public void setEspaciosTotales(int espaciosTotales) {
-        this.espaciosTotales = espaciosTotales;
+ 
+    public boolean verificarEspacioOcupado(String espacio){
+        return espaciosOcupados.contains(espacio);
     }
     
     public double horasTiquete(Tiquete t) {
     if (t.getFechaHoraSalida() == null) {
         return 0.0;
     }
-
     long minutos = Duration.between(t.getFechaHoraEntrada(), t.getFechaHoraSalida()).toMinutes();
     return minutos / 60.0;
 }
@@ -80,9 +71,10 @@ public class Parqueadero {
             id++;
             System.out.println("Tiquete #"+id);
             System.out.println("Usuario: "+t.getUsuario().getNombre());
+            System.out.println("ID: "+t.getIdTiquete());
             //System.out.println("Vehiculo: "+t.getVehiculo().getPlaca());
             System.out.println("Estado: "+t.getEstado());
-            System.out.println("Espacio ocupado: "+t.getEspacioOcupado());
+            System.out.println("Espacio ocupado: "+(t.getEspacioOcupado() != null ? t.getEspacioOcupado() : "N/A"));
             System.out.println("Hora de ingreso: "+ t.getFechaHoraEntrada().format(formato));
             System.out.println("Hora de salida: " + (t.getFechaHoraSalida() != null ? t.getFechaHoraSalida().format(formato) : "N/A"));
             System.out.println("-----------");
@@ -91,7 +83,9 @@ public class Parqueadero {
     }
     
     public void registrarTiquete(Tiquete t){
+        t.setFechaHoraEntrada(LocalDateTime.now());
         listaTiquetes.add(t);
+        System.out.println("Se ha registrado el tiquete con ID "+t.getIdTiquete());
     }
     
     public void removerTiquete(Tiquete t){
