@@ -14,11 +14,12 @@ public class ControlParqueadero {
     public static void main(String[] args) {
         Usuario estudiante = new Estudiante(5, "Ingenieria de sistemas", "Pregrado", "Santiago", "3017425651", "@", "123");
         Tiquete t1 = new Tiquete(1, estudiante);
-        Parqueadero pUDC = new Parqueadero("UDC", 5000, 5);
+        Parqueadero pUDC = new Parqueadero("UDC", 5000);
         ////
-        pUDC.registrarTiquete(t1, "1");
+        pUDC.registrarEntrada(t1);
         pUDC.mostrarTiquetes();
         //
-        pUDC.removerTiquete(t1);
+        pUDC.registrarSalida(t1);
+        pUDC.mostrarTiquetes();
     }
 }

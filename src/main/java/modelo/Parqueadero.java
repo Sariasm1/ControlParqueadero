@@ -18,7 +18,7 @@ public class Parqueadero {
     private ArrayList<String> espaciosOcupados;
     private String nombre;
     private double tarifaPorHora;
-    private static final int espaciosTotales = 5; 
+    private static final int espaciosTotales = 1; 
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     public Parqueadero(String nombre, double tarifaPorHora) {
@@ -82,11 +82,46 @@ public class Parqueadero {
         }
     }
     
-    public void registrarTiquete(Tiquete t){
+    public void registrarEntrada(Tiquete t){
+        if (espaciosDisponibles.isEmpty()) {
+            System.out.println("Parqueadero lleno, no hay espacios disponibles.");
+            return;
+        }
+        
+        if (listaTiquetes.contains(t)) {
+            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " ya se encuentra registrado.");
+            return;
+        }
+
         t.setFechaHoraEntrada(LocalDateTime.now());
+        //
+        String espacio = espaciosDisponibles.remove(0);
         listaTiquetes.add(t);
-        System.out.println("Se ha registrado el tiquete con ID "+t.getIdTiquete());
+        espaciosOcupados.add(espacio);
+        t.setEspacioOcupado(espacio);
+        //
+        System.out.println("Se ha registrado la entrada del tiquete con ID "+t.getIdTiquete());
     }
+    
+    public void registrarSalida(Tiquete t){
+        if (!listaTiquetes.contains(t)) {
+            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
+            return;
+        }
+        
+        t.setFechaHoraSalida(LocalDateTime.now());
+        t.setEstado("Pendiente de pago");
+        t.setActivo(false);
+        
+        String espacio = t.getEspacioOcupado();
+        if (espacio != null) {
+            espaciosOcupados.remove(espacio);
+            espaciosDisponibles.add(espacio);
+        }
+        t.setEspacioOcupado("N/A");
+        System.out.println("Se ha registrado la salida del tiquete con ID "+t.getIdTiquete());
+    }
+   
     
     public void removerTiquete(Tiquete t){
     if (listaTiquetes.remove(t)) {
