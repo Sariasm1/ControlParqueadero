@@ -31,6 +31,11 @@ public class Vista {
             System.out.println("-----------");
             System.out.println("Total: "+ costoBase + " COP");
             System.out.println("Descuento aplicado: " + (costoBase - descuento));
+            System.out.println("==========================");
+    }
+    
+    public void mostrarMensaje(String m) {
+        System.out.println(m);
     }
     
 }

@@ -23,7 +23,20 @@ public class Controlador {
     }
     
      public void cargarSistema(){
-        
+        Usuario estudiante1 = new Estudiante(5, "Ingenieria de sistemas", "Pregrado", "Santiago", "3017425651", "@", "123");
+        Usuario estudiante2 = new Estudiante(6, "Ingenieria de alimentos", "Pregrado", "Juan", "306534321", "@", "456");
+        Tiquete t1 = new Tiquete(1, estudiante1);
+        Tiquete t2 = new Tiquete(2, estudiante2);
+        ////
+        registrarEntrada(t1);
+        registrarEntrada(t2);
+        System.out.println("-----------");
+        mostrarTiquetes();
+        registrarSalida(t1);
+        System.out.println("-----------");
+        mostrarTiquetes();
+        pagarTiquete(t1);
+        mostrarInfoTiquete("123");
     }
     
     public boolean verificarEspacioOcupado(String espacio){
@@ -46,7 +59,7 @@ public class Controlador {
         int id=0;
         for (Tiquete t: parqueadero.getListaTiquetes()){
             id++;
-            System.out.println("Tiquete #"+id);
+            vista.mostrarMensaje("Tiquete #"+id);
             
             vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
         }
@@ -54,12 +67,12 @@ public class Controlador {
     
       public void registrarEntrada(Tiquete t){
         if (parqueadero.getEspaciosDisponibles().isEmpty()) {
-            System.out.println("Parqueadero lleno, no hay espacios disponibles.");
+            vista.mostrarMensaje("Parqueadero lleno, no hay espacios disponibles.");
             return;
         }
         
         if (verificarTiquete(t)) {
-            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " ya se encuentra registrado.");
+            vista.mostrarMensaje("El Tiquete con ID " + t.getIdTiquete() + " ya se encuentra registrado.");
             return;
         }
 
@@ -69,13 +82,12 @@ public class Controlador {
         parqueadero.addListaTiquetes(t);
         parqueadero.addEspaciosOcupados(espacio);
         t.setEspacioOcupado(espacio);
-        
-        System.out.println("Se ha registrado la entrada del tiquete con ID "+t.getIdTiquete());
+        vista.mostrarMensaje("Se ha registrado la entrada del tiquete con ID "+t.getIdTiquete());
     }
       
       public void registrarSalida(Tiquete t){
         if (!verificarTiquete(t)) {
-            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
+            vista.mostrarMensaje("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
             return;
         }
         t.setFechaHoraSalida(LocalDateTime.now());
@@ -88,54 +100,61 @@ public class Controlador {
             parqueadero.addEspaciosDisponibles(espacio);
         }
         t.setEspacioOcupado("N/A");
-        System.out.println("Se ha registrado la salida del tiquete con ID "+t.getIdTiquete());
+        vista.mostrarMensaje("Se ha registrado la salida del tiquete con ID "+t.getIdTiquete());
       }
       
       public void mostrarInfoTiquete(int idTiquete){
         Tiquete t = buscarTiquete(idTiquete);
         if(t != null){
-            System.out.println("Tiquete con ID de " + idTiquete);
+            vista.mostrarMensaje("Tiquete con ID de " + idTiquete);
             vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
             return;
         }
-        System.out.println("El Tiquete con ID " + idTiquete + " no se encuentra actualmente en el parqueadero."); 
+        vista.mostrarMensaje("El Tiquete con ID " + idTiquete + " no se encuentra actualmente en el parqueadero.");
     }
     
     public void mostrarInfoTiquete(String idPersona){
         Tiquete t = buscarTiquete(idPersona);
         if(t != null){
-            System.out.println("Tiquete de persona con ID " + idPersona);
+            vista.mostrarMensaje("Tiquete de persona con ID " + idPersona);
             vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
             return;
         }
-        System.out.println("La persona con ID " + idPersona + " no tiene tiquetes actualmente en el parqueadero."); 
+        vista.mostrarMensaje("La persona con ID " + idPersona + " no tiene tiquetes actualmente en el parqueadero.");
     }
       
      public void pagarTiquete(Tiquete t){
         if (!verificarTiquete(t)) {
-            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
+            vista.mostrarMensaje("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
             return;
         }
+        
+        if(t.getEstado().equals("Inactivo")){
+            vista.mostrarMensaje("El tiquete con ID " + t.getIdTiquete() + " ya se encuentra pagado.");
+            return;
+        }
+        
         t.setEstado("Inactivo");
+        vista.mostrarMensaje("Se ha hecho el pago del Tiquete con ID " + t.getIdTiquete());
     }
       
       public void removerTiquete(Tiquete t){
       if(buscarTiquete(t) != null){
          parqueadero.removeListaTiquetes(t);
-         System.out.println("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
+         vista.mostrarMensaje("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
          return;
       }
-      System.out.println("No se encontró ningún Tiquete con ID "+ t.getIdTiquete() + " en el parqueadero.");
+      vista.mostrarMensaje("No se encontró ningún Tiquete con ID "+ t.getIdTiquete() + " en el parqueadero.");
     }
     
     public void removerTiquete(int idTiquete){
       Tiquete t = buscarTiquete(idTiquete);
       if(t != null){
          parqueadero.removeListaTiquetes(t);
-         System.out.println("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
+         vista.mostrarMensaje("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
          return;
       }
-      System.out.println("No se encontró ningún Tiquete con ID "+ idTiquete + " en el parqueadero.");
+      vista.mostrarMensaje("No se encontró ningún Tiquete con ID "+ t.getIdTiquete() + " en el parqueadero.");
     }
     
     public Tiquete buscarTiquete(int idTiquete){

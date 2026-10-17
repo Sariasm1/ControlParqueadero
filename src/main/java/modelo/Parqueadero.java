@@ -11,12 +11,12 @@ import java.util.ArrayList;
  * @author santi
  */
 public class Parqueadero {
-    private ArrayList<Tiquete> listaTiquetes;
-    private ArrayList<String> espaciosDisponibles;
+    private final ArrayList<Tiquete> listaTiquetes;
+    private final ArrayList<String> espaciosDisponibles;
     private ArrayList<String> espaciosOcupados;
     private String nombre;
     private double tarifaPorHora;
-    private static final int espaciosTotales = 1; 
+    private final int espaciosTotales = 2; 
 
     public Parqueadero(String nombre, double tarifaPorHora) {
         this.nombre = nombre;
