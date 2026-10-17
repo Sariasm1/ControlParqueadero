@@ -5,7 +5,6 @@
 package controlador;
 import vista.*;
 import modelo.*;
-import java.time.format.DateTimeFormatter;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -49,7 +48,7 @@ public class Controlador {
             id++;
             System.out.println("Tiquete #"+id);
             
-            imprimirTiquete(t);
+            vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
         }
     }
     
@@ -92,5 +91,76 @@ public class Controlador {
         System.out.println("Se ha registrado la salida del tiquete con ID "+t.getIdTiquete());
       }
       
+      public void mostrarInfoTiquete(int idTiquete){
+        Tiquete t = buscarTiquete(idTiquete);
+        if(t != null){
+            System.out.println("Tiquete con ID de " + idTiquete);
+            vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
+            return;
+        }
+        System.out.println("El Tiquete con ID " + idTiquete + " no se encuentra actualmente en el parqueadero."); 
+    }
+    
+    public void mostrarInfoTiquete(String idPersona){
+        Tiquete t = buscarTiquete(idPersona);
+        if(t != null){
+            System.out.println("Tiquete de persona con ID " + idPersona);
+            vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
+            return;
+        }
+        System.out.println("La persona con ID " + idPersona + " no tiene tiquetes actualmente en el parqueadero."); 
+    }
+      
+     public void pagarTiquete(Tiquete t){
+        if (!verificarTiquete(t)) {
+            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
+            return;
+        }
+        t.setEstado("Inactivo");
+    }
+      
+      public void removerTiquete(Tiquete t){
+      if(buscarTiquete(t) != null){
+         parqueadero.removeListaTiquetes(t);
+         System.out.println("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
+         return;
+      }
+      System.out.println("No se encontró ningún Tiquete con ID "+ t.getIdTiquete() + " en el parqueadero.");
+    }
+    
+    public void removerTiquete(int idTiquete){
+      Tiquete t = buscarTiquete(idTiquete);
+      if(t != null){
+         parqueadero.removeListaTiquetes(t);
+         System.out.println("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
+         return;
+      }
+      System.out.println("No se encontró ningún Tiquete con ID "+ idTiquete + " en el parqueadero.");
+    }
+    
+    public Tiquete buscarTiquete(int idTiquete){
+        for (Tiquete t : parqueadero.getListaTiquetes()) {
+         if (t.getIdTiquete() == idTiquete)  { 
+             return t;
+            }
+         }
+     return null;
+    }
+    
+    public Tiquete buscarTiquete(String idPersona){
+     for (Tiquete t : parqueadero.getListaTiquetes()) {
+         if (t.getUsuario().getId().matches(idPersona)) { 
+             return t;
+            }
+         }
+     return null;
+    }
+    
+    public Tiquete buscarTiquete(Tiquete t) {
+    if (t != null && parqueadero.getListaTiquetes().contains(t)) {
+        return t; 
+    }
+    return null;
+    }
       
 }

@@ -4,6 +4,8 @@
 
 package main;
 import modelo.*;
+import vista.*;
+import controlador.*;
 
 /**
  *
@@ -12,16 +14,10 @@ import modelo.*;
 public class ControlParqueadero {
 
     public static void main(String[] args) {
-        Usuario estudiante = new Estudiante(5, "Ingenieria de sistemas", "Pregrado", "Santiago", "3017425651", "@", "123");
-        Tiquete t1 = new Tiquete(1, estudiante);
+        Vista vista = new Vista();
         Parqueadero pUDC = new Parqueadero("UDC", 5000);
+        Controlador controlador = new Controlador(pUDC, vista);
         ////
-        pUDC.registrarEntrada(t1);
-        pUDC.mostrarTiquetes();
-        //
-        pUDC.registrarSalida(t1);
-        pUDC.mostrarTiquetes();
-        pUDC.pagarTiquete(t1);
-        pUDC.mostrarInfoTiquete("123");
+        controlador.cargarSistema();
     }
 }
