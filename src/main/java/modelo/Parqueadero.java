@@ -49,29 +49,48 @@ public class Parqueadero {
         return tarifaPorHora;
     }
 
+    public ArrayList<String> getEspaciosDisponibles() {
+        return espaciosDisponibles;
+    }
+    
+    public void addEspaciosDisponibles(String e){
+        this.espaciosDisponibles.add(e);
+    }
+    
+    public String removeEspacioDisponible(int n){
+        return this.espaciosDisponibles.remove(n);
+    }
+
+    public ArrayList<String> getEspaciosOcupados() {
+        return espaciosOcupados;
+    }
+    
+    public void addEspaciosOcupados(String e){
+        this.espaciosOcupados.add(e);
+    }
+    
+    public void removeEspaciosOcupados(String e){
+        this.espaciosOcupados.remove(e);
+    }
+
+    public ArrayList<Tiquete> getListaTiquetes() {
+        return listaTiquetes;
+    }
+    
+    public void addListaTiquetes(Tiquete t){
+        this.listaTiquetes.add(t);
+    }
+    
+    public void removeListaTiquetes(Tiquete t){
+        this.listaTiquetes.remove(t);
+    }
+    
     public void setTarifaPorHora(double tarifaPorHora) {
         this.tarifaPorHora = tarifaPorHora;
     }
- 
-    public boolean verificarEspacioOcupado(String espacio){
-        return espaciosOcupados.contains(espacio);
-    }
     
-    public boolean verificarTiquete(Tiquete t){
-        return listaTiquetes.contains(t);
-    }
-    
-    
-    public double horasTiquete(Tiquete t) {
-    if (t.getFechaHoraSalida() == null) {
-        return 0.0;
-    }
-    long minutos = Duration.between(t.getFechaHoraEntrada(), t.getFechaHoraSalida()).toMinutes();
-    return minutos / 60.0;
-}
-    
-    public void imprimirTiquete(Tiquete t){
-            double costoBase = horasTiquete(t) * tarifaPorHora;
+    public void imprimirTiquete(double horasTiquete, Tiquete t){
+            double costoBase = horasTiquete * tarifaPorHora;
             double descuento = costoBase * t.getUsuario().obtenerDescuento();
             System.out.println("Usuario: "+t.getUsuario().getNombre());
             System.out.println("ID: "+t.getIdTiquete());
@@ -85,56 +104,7 @@ public class Parqueadero {
             System.out.println("Total: "+ costoBase + " COP");
             System.out.println("Descuento aplicado: " + (costoBase - descuento));
     }
-    
-    public void mostrarTiquetes(){
-        int id=0;
-        for (Tiquete t: listaTiquetes){
-            id++;
-            System.out.println("Tiquete #"+id);
-            imprimirTiquete(t);
-        }
-    }
-    
-    public void registrarEntrada(Tiquete t){
-        if (espaciosDisponibles.isEmpty()) {
-            System.out.println("Parqueadero lleno, no hay espacios disponibles.");
-            return;
-        }
-        
-        if (verificarTiquete(t)) {
-            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " ya se encuentra registrado.");
-            return;
-        }
 
-        t.setFechaHoraEntrada(LocalDateTime.now());
-        //
-        String espacio = espaciosDisponibles.remove(0);
-        listaTiquetes.add(t);
-        espaciosOcupados.add(espacio);
-        t.setEspacioOcupado(espacio);
-        //
-        System.out.println("Se ha registrado la entrada del tiquete con ID "+t.getIdTiquete());
-    }
-    
-    public void registrarSalida(Tiquete t){
-        if (!verificarTiquete(t)) {
-            System.out.println("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
-            return;
-        }
-        
-        t.setFechaHoraSalida(LocalDateTime.now());
-        t.setEstado("Pendiente de pago");
-        t.setActivo(false);
-        
-        String espacio = t.getEspacioOcupado();
-        if (espacio != null) {
-            espaciosOcupados.remove(espacio);
-            espaciosDisponibles.add(espacio);
-        }
-        t.setEspacioOcupado("N/A");
-        System.out.println("Se ha registrado la salida del tiquete con ID "+t.getIdTiquete());
-    }
-   
     
     public void removerTiquete(Tiquete t){
     if (listaTiquetes.remove(t)) {
