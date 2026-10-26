@@ -45,9 +45,9 @@ public class Vehiculo {
         this.color = color;
     }
 
-    public double calcularTarifa() {
-        return 0;
-    }
+    public abstract double calcularTarifa();
+       
+    
 
     @Override
     public String toString() {
