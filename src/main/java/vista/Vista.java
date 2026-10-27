@@ -18,7 +18,8 @@ public class Vista {
     }
     
     public void imprimirTiquete(double horasTiquete, double tarifaPorHora, Tiquete t){
-        double costoBase = (2 * tarifaPorHora) + t.getVehiculo().calcularTarifa();
+        // El uso del 2 en el costo base es para pruebas de calculo. Debe usarse el double horasTiquete.
+        double costoBase = (2 * tarifaPorHora) + t.getVehiculo().calcularTarifa(); 
         double descuento = costoBase * t.getUsuario().obtenerDescuento();
         //
         System.out.println("Usuario: "+t.getUsuario().getNombre());

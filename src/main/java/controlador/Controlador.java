@@ -23,22 +23,41 @@ public class Controlador {
     }
     
      public void cargarSistema(){
+         
+        /*
+         Hola, este programa corresponde a un sistema de gestión de parqueaderos en el contexto de la universidad diseñado para administrar tiquetes de servicio, 
+         registrar los datos del usuario y del vehículo (como el tipo y la placa), y llevar un control de las horas de ingreso y salida. Asimismo, administra los 
+         estados del servicio como "Pendiente de pago" y cuenta con lógica para calcular tarifas, aplicar descuentos porcentuales y determinar el monto total 
+         a pagar por el cliente, según su rol en la universidad y el tipo de vehiculoD.
+         
+         De momento no se incluyen funciones como registrarTiquete, registrarUsuario, registrarVehiculo. Directamente creamos el objeto con su constructor haciendo
+         la referencia directa. En un futuro en el que se vaya aplicar interfaces y se agreguen nuevas interacciones al sistema, será necesario implementarlo.A
+         
+         Al no trabajar con archivos, no podemos hacer un guardado de datos para poder trabajar bien con la hora de salida y hacer un calculo de horas realista. Debido a
+         a esto, en la linea 21 de la Vista en la funcion de imprimirTiquete(), en el calculo base no se usa horasTiquete, sino un int manual. De esta forma se  puede evidenciaEr
+         el calculo de las horas en un contexto real.
+        */
+            
+        // Creación objeto usuario
         Usuario estudiante1 = new Estudiante(5, "Ingenieria de sistemas", "Pregrado", "Santiago", "3017425651", "@", "123");
         Usuario estudiante2 = new Estudiante(6, "Ingenieria de alimentos", "Pregrado", "Juan", "306534321", "@", "456");
+        // Creacion objeto vehiculo
         Vehiculo camioneta = new Camioneta(30, "BFD-233", "Toyota", "Negro");
         Vehiculo moto = new Motocicleta(150, "LTP-32I", "Yamaha", "Azul");
+        // Creacion objeto Tiquete
         Tiquete t1 = new Tiquete(1, estudiante1, camioneta);
         Tiquete t2 = new Tiquete(2, estudiante2, moto);
         ////
-        registrarEntrada(t1);
-        registrarEntrada(t2);
+        registrarEntrada(t1); // Registramos la entrada del tiquete 1.
+        registrarEntrada(t2); // Registramos la entrada del tiquete 2.
         System.out.println("-----------");
-        mostrarTiquetes();
-        registrarSalida(t1);
+        mostrarTiquetes(); // Imprimos todos los tiquetes.
+        registrarSalida(t1); // Registramos la salida del tiquete: Al hacer esto, el tiquete pasa a "Estado" de "Pendiente de pago" y su "Espacio ocupado" a "N/A".
         System.out.println("-----------");
-        mostrarTiquetes();
-        pagarTiquete(t1);
-        mostrarInfoTiquete("123");
+        mostrarTiquetes(); // Imprimos todos los tiquete para ver los cambios.
+        pagarTiquete(t1); // Pagamos el tiquete 1: Al hacer esto, el tiquete pasa a "Estado" de "Inactivo".
+        mostrarInfoTiquete("123"); // Sobrecarga de metodo con String.
+        mostrarInfoTiquete(1); // Sobrecarga de metodo con int.
     }
     
     public boolean verificarEspacioOcupado(String espacio){
