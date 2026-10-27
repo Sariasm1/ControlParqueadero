@@ -1,14 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 import java.time.LocalDateTime;
 
-/**
- *
- * @author santi
- */
 public class Tiquete {
     private int idTiquete;
     private LocalDateTime fechaHoraEntrada;
@@ -16,13 +8,13 @@ public class Tiquete {
     private String espacioOcupado;
     private boolean activo;
     private Usuario usuario;
-   // private Vehiculo vehiculo;
+    private Vehiculo vehiculo;
     private String estado;
 
-    public Tiquete(int idTiquete, Usuario usuario) { //Vehiculo vehiculo
+    public Tiquete(int idTiquete, Usuario usuario) {
         this.idTiquete = idTiquete;
         this.usuario = usuario;
-       // this.vehiculo = vehiculo;
+        this.vehiculo = vehiculo;
         this.activo = true;
         this.estado = "Activo";
     }
@@ -74,9 +66,7 @@ public class Tiquete {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
-    /**
-    
+
     public Vehiculo getVehiculo() {
         return vehiculo;
     }
@@ -84,10 +74,7 @@ public class Tiquete {
     public void setVehiculo(Vehiculo vehiculo) {
         this.vehiculo = vehiculo;
     }
-     * @return 
-    **/
 
-    
     public String getEstado() {
         return estado;
     }
@@ -98,12 +85,9 @@ public class Tiquete {
 
     @Override
     public String toString() {
-        return "Tiquete{" + "idTiquete=" + idTiquete + ", fechaHoraEntrada=" + fechaHoraEntrada + ", fechaHoraSalida=" + fechaHoraSalida + ", espacioOcupado=" + espacioOcupado + ", activo=" + activo + ", usuario=" + usuario + ", estado=" + estado + '}';
+        return "Tiquete{" + "idTiquete=" + idTiquete + ", fechaHoraEntrada=" + fechaHoraEntrada
+                + ", fechaHoraSalida=" + fechaHoraSalida + ", espacioOcupado=" + espacioOcupado
+                + ", activo=" + activo + ", usuario=" + usuario + ", vehiculo=" + vehiculo
+                + ", estado=" + estado + '}';
     }
-    
-    
-    
-    
-    
-    
 }

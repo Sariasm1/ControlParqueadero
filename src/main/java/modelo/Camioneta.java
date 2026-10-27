@@ -18,6 +18,6 @@ public class Camioneta extends Vehiculo {
 
     @Override
     public double calcularTarifa() {
-        return 8000 + (capacidadCarga * 1000); // valor de ejemplo
+        return 8000 + (capacidadCarga * 1000); 
     }
 }
