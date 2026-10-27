@@ -25,8 +25,10 @@ public class Controlador {
      public void cargarSistema(){
         Usuario estudiante1 = new Estudiante(5, "Ingenieria de sistemas", "Pregrado", "Santiago", "3017425651", "@", "123");
         Usuario estudiante2 = new Estudiante(6, "Ingenieria de alimentos", "Pregrado", "Juan", "306534321", "@", "456");
-        Tiquete t1 = new Tiquete(1, estudiante1);
-        Tiquete t2 = new Tiquete(2, estudiante2);
+        Vehiculo camioneta = new Camioneta(30, "BFD-233", "Toyota", "Negro");
+        Vehiculo moto = new Motocicleta(150, "LTP-32I", "Yamaha", "Azul");
+        Tiquete t1 = new Tiquete(1, estudiante1, camioneta);
+        Tiquete t2 = new Tiquete(2, estudiante2, moto);
         ////
         registrarEntrada(t1);
         registrarEntrada(t2);

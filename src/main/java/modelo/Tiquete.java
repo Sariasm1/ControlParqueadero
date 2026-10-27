@@ -11,7 +11,7 @@ public class Tiquete {
     private Vehiculo vehiculo;
     private String estado;
 
-    public Tiquete(int idTiquete, Usuario usuario) {
+    public Tiquete(int idTiquete, Usuario usuario, Vehiculo vehiculo) {
         this.idTiquete = idTiquete;
         this.usuario = usuario;
         this.vehiculo = vehiculo;
