@@ -1,6 +1,7 @@
+package modelo;
 public class Camioneta extends Vehiculo {
 
-    public double capacidadCarga;
+    private double capacidadCarga;
 
     public Camioneta(double capacidadCarga, String placa, String marca, String color) {
         super("Camioneta", placa, marca, color);

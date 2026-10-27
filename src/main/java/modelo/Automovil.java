@@ -1,4 +1,4 @@
-
+package modelo;
 
 public class Automovil extends Vehiculo {
 
@@ -8,6 +8,6 @@ public class Automovil extends Vehiculo {
 
     @Override
     public double calcularTarifa() {
-        return 5000; // valor de ejemplo, ajústalo a lo que pida el enunciado
+        return 5000; 
     }
 }

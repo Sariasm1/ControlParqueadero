@@ -18,7 +18,6 @@ public class Bicicleta extends Vehiculo {
 
     @Override
     public double calcularTarifa() {
-       
     if (esElectrico) {
         return 1500;
     } else {

@@ -1,7 +1,7 @@
 package modelo;
-public class Vehiculo {
+public abstract class Vehiculo {
 
-    private String tipo;   // "Carro", "Camioneta", "Bicicleta" o "Moto"
+    private String tipo;   
     private String placa;
     private String marca;
     private String color;
