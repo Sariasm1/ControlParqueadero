@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package modelo;
+import utilidades.*;
 import java.util.ArrayList;
 
 
@@ -12,26 +13,27 @@ import java.util.ArrayList;
  */
 public class Parqueadero {
     private final ArrayList<Tiquete> listaTiquetes;
-    private final ArrayList<String> espaciosDisponibles;
-    private ArrayList<String> espaciosOcupados;
+    private ArrayList<Espacio> espacios;
     private String nombre;
     private double tarifaPorHora;
-    private final int espaciosTotales = 2; 
+    private final int espaciosTotales; 
 
-    public Parqueadero(String nombre, double tarifaPorHora) {
+    public Parqueadero(String nombre, double tarifaPorHora, int espaciosTotales) {
         this.nombre = nombre;
         this.tarifaPorHora = tarifaPorHora;
+        this.espaciosTotales = espaciosTotales;
         this.listaTiquetes = new ArrayList<>();
-        this.espaciosOcupados = new ArrayList<>();
-        this.espaciosDisponibles = new ArrayList<>();
+        this.espacios = new ArrayList<>();
         
-        for (int i = 1; i <= espaciosTotales; i++) {
-            this.espaciosDisponibles.add("A-" + i);
+        for (int i = 1; i <= this.espaciosTotales; i++) {
+            this.espacios.add(new Espacio("A-" + i));
         }
     }
-
-    public void setEspaciosOcupados(ArrayList<String> espaciosOcupados) {
-        this.espaciosOcupados = espaciosOcupados;
+    
+    public Tiquete crearTiquete(int id, Usuario u, Vehiculo v) {
+        Tiquete t = new Tiquete(id, u, v);
+        this.listaTiquetes.add(t);
+        return t;
     }
 
     public String getNombre() {
@@ -44,30 +46,6 @@ public class Parqueadero {
 
     public double getTarifaPorHora() {
         return tarifaPorHora;
-    }
-
-    public ArrayList<String> getEspaciosDisponibles() {
-        return espaciosDisponibles;
-    }
-    
-    public void addEspaciosDisponibles(String e){
-        this.espaciosDisponibles.add(e);
-    }
-    
-    public String removeEspacioDisponible(int n){
-        return this.espaciosDisponibles.remove(n);
-    }
-
-    public ArrayList<String> getEspaciosOcupados() {
-        return espaciosOcupados;
-    }
-    
-    public void addEspaciosOcupados(String e){
-        this.espaciosOcupados.add(e);
-    }
-    
-    public void removeEspaciosOcupados(String e){
-        this.espaciosOcupados.remove(e);
     }
 
     public ArrayList<Tiquete> getListaTiquetes() {
@@ -85,4 +63,18 @@ public class Parqueadero {
     public void setTarifaPorHora(double tarifaPorHora) {
         this.tarifaPorHora = tarifaPorHora;
     }
+    
+    public ArrayList<Espacio> getEspacios() {
+         return espacios;
+    }
+
+    public Espacio obtenerEspacioDisponible() {
+        for (Espacio e : espacios) {
+            if (e.getEstado() == EstadoEspacio.DISPONIBLE) {
+                return e;
+            }
+        }
+        return null;
+    }
+
 }

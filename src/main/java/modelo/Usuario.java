@@ -20,6 +20,9 @@ public abstract class Usuario {
         this.correo = correo;
         this.id = id;
     }
+    
+    public Usuario() {
+    }
 
     public String getNombre() {
         return nombre;

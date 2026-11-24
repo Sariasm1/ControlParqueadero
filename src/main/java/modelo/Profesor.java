@@ -17,6 +17,10 @@ public class Profesor extends Usuario {
         this.materia = materia;
         this.carrera = carrera;
     }
+    
+    public Profesor(){
+        super();
+    }
 
     public String getMateria() {
         return materia;

@@ -19,6 +19,10 @@ public class Estudiante extends Usuario {
         this.carrera = carrera;
         this.nivelAcademico = nivelAcademico;
     }
+    
+    public Estudiante(){
+        super();
+    }
 
     public int getSemestre() {
         return semestre;

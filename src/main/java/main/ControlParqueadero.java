@@ -15,7 +15,7 @@ public class ControlParqueadero {
 
     public static void main(String[] args) {
         Vista vista = new Vista();
-        Parqueadero pUDC = new Parqueadero("UDC", 5000);
+        Parqueadero pUDC = new Parqueadero("UDC", 5000, 2);
         Controlador controlador = new Controlador(pUDC, vista);
         ////
         controlador.cargarSistema();

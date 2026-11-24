@@ -7,6 +7,7 @@ import vista.*;
 import modelo.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import utilidades.*;
 
 
 /**
@@ -32,10 +33,6 @@ public class Controlador {
          
          De momento no se incluyen funciones como registrarTiquete, registrarUsuario, registrarVehiculo. Directamente creamos el objeto con su constructor haciendo
          la referencia directa. En un futuro en el que se vaya aplicar interfaces y se agreguen nuevas interacciones al sistema, será necesario implementarlo.A
-         
-         Al no trabajar con archivos, no podemos hacer un guardado de datos para poder trabajar bien con la hora de salida y hacer un calculo de horas realista. Debido a
-         a esto, en la linea 21 de la Vista en la funcion de imprimirTiquete(), en el calculo base no se usa horasTiquete, sino un int manual. De esta forma se  puede evidenciaEr
-         el calculo de las horas en un contexto real.
         */
             
         // Creación objeto usuario
@@ -45,90 +42,89 @@ public class Controlador {
         Vehiculo camioneta = new Camioneta(30, "BFD-233", "Toyota", "Negro");
         Vehiculo moto = new Motocicleta(150, "LTP-32I", "Yamaha", "Azul");
         // Creacion objeto Tiquete
-        Tiquete t1 = new Tiquete(1, estudiante1, camioneta);
-        Tiquete t2 = new Tiquete(2, estudiante2, moto);
-        ////
-        registrarEntrada(t1); // Registramos la entrada del tiquete 1.
-        registrarEntrada(t2); // Registramos la entrada del tiquete 2.
+        Tiquete t1 = registrarEntrada(1, estudiante1, camioneta);
+        Tiquete t2 = registrarEntrada(2, estudiante2, moto);
+        ///
         System.out.println("-----------");
         mostrarTiquetes(); // Imprimos todos los tiquetes.
         registrarSalida(t1); // Registramos la salida del tiquete: Al hacer esto, el tiquete pasa a "Estado" de "Pendiente de pago" y su "Espacio ocupado" a "N/A".
         System.out.println("-----------");
         mostrarTiquetes(); // Imprimos todos los tiquete para ver los cambios.
         pagarTiquete(t1); // Pagamos el tiquete 1: Al hacer esto, el tiquete pasa a "Estado" de "Inactivo".
+        pagarTiquete(t2);
         mostrarInfoTiquete("123"); // Sobrecarga de metodo con String.
         mostrarInfoTiquete(1); // Sobrecarga de metodo con int.
     }
     
-    public boolean verificarEspacioOcupado(String espacio){
-        return parqueadero.getEspaciosOcupados().contains(espacio);
-    }
+     public boolean verificarEspacioOcupado(String codigoEspacio) {
+            for (Espacio e : parqueadero.getEspacios()) {
+                if (e.getCodigo().equals(codigoEspacio) && e.getEstado() == EstadoEspacio.OCUPADO) {
+                    return true;
+            }
+        }
+        return false;
+     }
     
-    public boolean verificarTiquete(Tiquete t){
+     public boolean verificarTiquete(Tiquete t){
         return parqueadero.getListaTiquetes().contains(t);
-    }
+     }
     
-    public double horasTiquete(Tiquete t) {
+     public double horasTiquete(Tiquete t) {
         if (t.getFechaHoraSalida() == null) {
             return 0.0;
         }
         long minutos = Duration.between(t.getFechaHoraEntrada(), t.getFechaHoraSalida()).toMinutes();
         return minutos / 60.0;
-    }  
+     }  
     
-      public void mostrarTiquetes(){
+     public void mostrarTiquetes(){
         int id=0;
         for (Tiquete t: parqueadero.getListaTiquetes()){
             id++;
             vista.mostrarMensaje("Tiquete #"+id);
             
-            vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
+            vista.imprimirTiquete(parqueadero.getTarifaPorHora(), t);
         }
-    }
-    
-      public void registrarEntrada(Tiquete t){
-        if (parqueadero.getEspaciosDisponibles().isEmpty()) {
+     } 
+      
+      public Tiquete registrarEntrada(int id, Usuario u, Vehiculo v) {
+        Espacio espacio = parqueadero.obtenerEspacioDisponible();
+        if (espacio == null) {
             vista.mostrarMensaje("Parqueadero lleno, no hay espacios disponibles.");
-            return;
-        }
-        
-        if (verificarTiquete(t)) {
-            vista.mostrarMensaje("El Tiquete con ID " + t.getIdTiquete() + " ya se encuentra registrado.");
-            return;
+            return null;
         }
 
-        t.setFechaHoraEntrada(LocalDateTime.now());
-        //
-        String espacio = parqueadero.removeEspacioDisponible(0);
-        parqueadero.addListaTiquetes(t);
-        parqueadero.addEspaciosOcupados(espacio);
-        t.setEspacioOcupado(espacio);
-        vista.mostrarMensaje("Se ha registrado la entrada del tiquete con ID "+t.getIdTiquete());
+         Tiquete t = parqueadero.crearTiquete(id, u, v);
+         t.setFechaHoraEntrada(LocalDateTime.now());
+         espacio.setEstado(EstadoEspacio.OCUPADO);
+         t.setEspacio(espacio); 
+         vista.mostrarMensaje("Se ha registrado la entrada del tiquete con ID " + t.getIdTiquete());
+        return t;
     }
-      
-      public void registrarSalida(Tiquete t){
-        if (!verificarTiquete(t)) {
-            vista.mostrarMensaje("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
-            return;
+
+        public void registrarSalida(Tiquete t) {
+            if (t == null || !verificarTiquete(t)) {
+                vista.mostrarMensaje("El Tiquete no se encuentra registrado.");
+                return;
+            }
+
+            t.setFechaHoraSalida(LocalDateTime.now());
+            t.setEstado(EstadoTiquete.PENDIENTE);
+
+            Espacio espacio = t.getEspacioOcupado();
+            if (espacio != null) {
+                espacio.setEstado(EstadoEspacio.DISPONIBLE);
+            }
+            t.setEspacio(null); 
+            vista.mostrarMensaje("Se ha registrado la salida del tiquete con ID " + t.getIdTiquete());
         }
-        t.setFechaHoraSalida(LocalDateTime.now());
-        t.setEstado("Pendiente de pago");
-        t.setActivo(false);
-        
-        String espacio = t.getEspacioOcupado();
-        if (espacio != null) {
-            parqueadero.removeEspaciosOcupados(espacio);
-            parqueadero.addEspaciosDisponibles(espacio);
-        }
-        t.setEspacioOcupado("N/A");
-        vista.mostrarMensaje("Se ha registrado la salida del tiquete con ID "+t.getIdTiquete());
-      }
+
       
       public void mostrarInfoTiquete(int idTiquete){
         Tiquete t = buscarTiquete(idTiquete);
         if(t != null){
             vista.mostrarMensaje("Tiquete con ID de " + idTiquete);
-            vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
+            vista.imprimirTiquete(parqueadero.getTarifaPorHora(), t);
             return;
         }
         vista.mostrarMensaje("El Tiquete con ID " + idTiquete + " no se encuentra actualmente en el parqueadero.");
@@ -138,7 +134,7 @@ public class Controlador {
         Tiquete t = buscarTiquete(idPersona);
         if(t != null){
             vista.mostrarMensaje("Tiquete de persona con ID " + idPersona);
-            vista.imprimirTiquete(horasTiquete(t), parqueadero.getTarifaPorHora(), t);
+            vista.imprimirTiquete(parqueadero.getTarifaPorHora(), t);
             return;
         }
         vista.mostrarMensaje("La persona con ID " + idPersona + " no tiene tiquetes actualmente en el parqueadero.");
@@ -150,12 +146,12 @@ public class Controlador {
             return;
         }
         
-        if(t.getEstado().equals("Inactivo")){
+        if(t.getEstado() == EstadoTiquete.PAGADO){
             vista.mostrarMensaje("El tiquete con ID " + t.getIdTiquete() + " ya se encuentra pagado.");
             return;
         }
         
-        t.setEstado("Inactivo");
+        t.setEstado(EstadoTiquete.PAGADO);
         vista.mostrarMensaje("Se ha hecho el pago del Tiquete con ID " + t.getIdTiquete());
     }
       
@@ -175,7 +171,7 @@ public class Controlador {
          vista.mostrarMensaje("Tiquete con ID "+ t.getIdTiquete()+ " removido con exito.");
          return;
       }
-      vista.mostrarMensaje("No se encontró ningún Tiquete con ID "+ t.getIdTiquete() + " en el parqueadero.");
+      vista.mostrarMensaje("No se encontró ningún Tiquete con ID "+ idTiquete + " en el parqueadero.");
     }
     
     public Tiquete buscarTiquete(int idTiquete){

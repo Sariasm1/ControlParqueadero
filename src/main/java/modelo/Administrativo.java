@@ -12,6 +12,11 @@ public class Administrativo extends Usuario {
     private String dependencia;
     private String cargo;
 
+    public Administrativo() {
+       super();
+    }
+
+    
     public Administrativo(String dependencia, String cargo, String nombre, String celular, String correo, String id) {
         super(nombre, celular, correo, id);
         this.dependencia = dependencia;

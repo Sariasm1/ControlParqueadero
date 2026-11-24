@@ -1,23 +1,24 @@
 package modelo;
+import utilidades.*;
 import java.time.LocalDateTime;
 
 public class Tiquete {
     private int idTiquete;
     private LocalDateTime fechaHoraEntrada;
     private LocalDateTime fechaHoraSalida;
-    private String espacioOcupado;
-    private boolean activo;
+    private Espacio espacioOcupado;
     private Usuario usuario;
     private Vehiculo vehiculo;
-    private String estado;
+    private EstadoTiquete estado;
 
     public Tiquete(int idTiquete, Usuario usuario, Vehiculo vehiculo) {
         this.idTiquete = idTiquete;
         this.usuario = usuario;
         this.vehiculo = vehiculo;
-        this.activo = true;
-        this.estado = "Activo";
+        this.estado = EstadoTiquete.ACTIVO;
     }
+    
+    public Tiquete(){}
 
     public int getIdTiquete() {
         return idTiquete;
@@ -43,22 +44,6 @@ public class Tiquete {
         this.fechaHoraSalida = fechaHoraSalida;
     }
 
-    public String getEspacioOcupado() {
-        return espacioOcupado;
-    }
-
-    public void setEspacioOcupado(String espacioOcupado) {
-        this.espacioOcupado = espacioOcupado;
-    }
-
-    public boolean isActivo() {
-        return activo;
-    }
-
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
-
     public Usuario getUsuario() {
         return usuario;
     }
@@ -74,12 +59,20 @@ public class Tiquete {
     public void setVehiculo(Vehiculo vehiculo) {
         this.vehiculo = vehiculo;
     }
-
-    public String getEstado() {
+    
+    public void setEspacio(Espacio espacio){
+        this.espacioOcupado = espacio;
+    }
+    
+    public Espacio getEspacioOcupado() {
+        return espacioOcupado;
+    }
+    
+    public EstadoTiquete getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoTiquete estado) {
         this.estado = estado;
     }
 
@@ -87,7 +80,7 @@ public class Tiquete {
     public String toString() {
         return "Tiquete{" + "idTiquete=" + idTiquete + ", fechaHoraEntrada=" + fechaHoraEntrada
                 + ", fechaHoraSalida=" + fechaHoraSalida + ", espacioOcupado=" + espacioOcupado
-                + ", activo=" + activo + ", usuario=" + usuario + ", vehiculo=" + vehiculo
+                +  ", usuario=" + usuario + ", vehiculo=" + vehiculo
                 + ", estado=" + estado + '}';
     }
 }

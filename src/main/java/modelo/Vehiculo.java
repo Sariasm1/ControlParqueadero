@@ -1,24 +1,31 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
 package modelo;
+
+/**
+ *
+ * @author santi
+ */
+
 public abstract class Vehiculo {
 
     private String tipo;   
-    private String placa;
     private String marca;
     private String color;
 
-    public Vehiculo(String tipo, String placa, String marca, String color) {
+    public Vehiculo(String tipo, String marca, String color) {
         this.tipo = tipo;
-        this.placa = placa;
         this.marca = marca;
         this.color = color;
     }
+    
+    public Vehiculo(){}
 
     public String getTipo() {
         return tipo;
-    }
-
-    public String getPlaca() {
-        return placa;
     }
 
     public String getMarca() {
@@ -33,10 +40,6 @@ public abstract class Vehiculo {
         this.tipo = tipo;
     }
 
-    public void setPlaca(String p) {
-        this.placa = p;
-    }
-
     public void setMarca(String m) {
         this.marca = m;
     }
@@ -46,11 +49,9 @@ public abstract class Vehiculo {
     }
 
     public abstract double calcularTarifa();
-       
-    
-
+      
     @Override
     public String toString() {
-        return "Tipo: " + tipo + ", Placa: " + placa + ", Marca: " + marca + ", Color: " + color;
+        return "Tipo: " + tipo + ", Placa: " + ", Marca: " + marca + ", Color: " + color;
     }
 }

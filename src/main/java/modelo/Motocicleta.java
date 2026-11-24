@@ -1,11 +1,15 @@
 package modelo;
-public class Motocicleta extends Vehiculo {
+public class Motocicleta extends VehiculoMotorizado {
 
     private int cilindraje;
 
     public Motocicleta(int cilindraje, String placa, String marca, String color) {
         super("Moto", placa, marca, color);
         this.cilindraje = cilindraje;
+    }
+    
+    public Motocicleta(){
+        super();
     }
 
     public int getCilindraje() {

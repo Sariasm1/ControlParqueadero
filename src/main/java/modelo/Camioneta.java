@@ -1,11 +1,15 @@
 package modelo;
-public class Camioneta extends Vehiculo {
+public class Camioneta extends VehiculoMotorizado {
 
     private double capacidadCarga;
 
     public Camioneta(double capacidadCarga, String placa, String marca, String color) {
         super("Camioneta", placa, marca, color);
         this.capacidadCarga = capacidadCarga;
+    }
+    
+    public Camioneta(){
+        super();
     }
 
     public double getCapacidadCarga() {
