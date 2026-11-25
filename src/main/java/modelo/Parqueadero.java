@@ -30,7 +30,7 @@ public class Parqueadero {
         }
     }
     
-    public Tiquete crearTiquete(int id, Usuario u, Vehiculo v) {
+    public synchronized Tiquete crearTiquete(int id, Usuario u, Vehiculo v) {
         Tiquete t = new Tiquete(id, u, v);
         this.listaTiquetes.add(t);
         return t;
@@ -52,11 +52,11 @@ public class Parqueadero {
         return listaTiquetes;
     }
     
-    public void addListaTiquetes(Tiquete t){
+    public synchronized void addListaTiquetes(Tiquete t){
         this.listaTiquetes.add(t);
     }
     
-    public void removeListaTiquetes(Tiquete t){
+    public synchronized void removeListaTiquetes(Tiquete t){
         this.listaTiquetes.remove(t);
     }
     
@@ -75,6 +75,22 @@ public class Parqueadero {
             }
         }
         return null;
+    }
+
+    public synchronized Espacio ocuparEspacio() {
+        for (Espacio e : espacios) {
+            if (e.getEstado() == EstadoEspacio.DISPONIBLE) {
+                e.setEstado(EstadoEspacio.OCUPADO);
+                return e;
+            }
+        }
+        return null;
+    }
+
+    public synchronized void liberarEspacio(Espacio e) {
+        if (e != null) {
+            e.setEstado(EstadoEspacio.DISPONIBLE);
+        }
     }
 
 }

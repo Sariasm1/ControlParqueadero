@@ -5,8 +5,9 @@
 package controlador;
 import vista.*;
 import modelo.*;
-import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.concurrent.*;
 import utilidades.*;
 
 
@@ -51,6 +52,7 @@ public class Controlador {
         System.out.println("-----------");
         mostrarTiquetes(); // Imprimos todos los tiquete para ver los cambios.
         pagarTiquete(t1); // Pagamos el tiquete 1: Al hacer esto, el tiquete pasa a "Estado" de "Inactivo".
+        registrarSalida(t2); // t2 sale antes de pagar (libera su espacio)
         pagarTiquete(t2);
         mostrarInfoTiquete("123"); // Sobrecarga de metodo con String.
         mostrarInfoTiquete(1); // Sobrecarga de metodo con int.
@@ -68,15 +70,8 @@ public class Controlador {
      public boolean verificarTiquete(Tiquete t){
         return parqueadero.getListaTiquetes().contains(t);
      }
-    
-     public double horasTiquete(Tiquete t) {
-        if (t.getFechaHoraSalida() == null) {
-            return 0.0;
-        }
-        long minutos = Duration.between(t.getFechaHoraEntrada(), t.getFechaHoraSalida()).toMinutes();
-        return minutos / 60.0;
-     }  
-    
+   
+     
      public void mostrarTiquetes(){
         int id=0;
         for (Tiquete t: parqueadero.getListaTiquetes()){
@@ -88,17 +83,16 @@ public class Controlador {
      } 
       
       public Tiquete registrarEntrada(int id, Usuario u, Vehiculo v) {
-        Espacio espacio = parqueadero.obtenerEspacioDisponible();
+        Espacio espacio = parqueadero.ocuparEspacio();
         if (espacio == null) {
-            vista.mostrarMensaje("Parqueadero lleno, no hay espacios disponibles.");
+            vista.mostrarMensaje("Parqueadero lleno, no hay espacio para el tiquete " + id + ".");
             return null;
         }
 
          Tiquete t = parqueadero.crearTiquete(id, u, v);
          t.setFechaHoraEntrada(LocalDateTime.now());
-         espacio.setEstado(EstadoEspacio.OCUPADO);
          t.setEspacio(espacio); 
-         vista.mostrarMensaje("Se ha registrado la entrada del tiquete con ID " + t.getIdTiquete());
+         vista.mostrarMensaje("Se ha registrado la entrada del tiquete con ID " + t.getIdTiquete() + " en el espacio " + espacio.getCodigo());
         return t;
     }
 
@@ -112,9 +106,7 @@ public class Controlador {
             t.setEstado(EstadoTiquete.PENDIENTE);
 
             Espacio espacio = t.getEspacioOcupado();
-            if (espacio != null) {
-                espacio.setEstado(EstadoEspacio.DISPONIBLE);
-            }
+            parqueadero.liberarEspacio(espacio); // liberar con el mismo candado que ocuparEspacio()
             t.setEspacio(null); 
             vista.mostrarMensaje("Se ha registrado la salida del tiquete con ID " + t.getIdTiquete());
         }
@@ -141,6 +133,10 @@ public class Controlador {
     }
       
      public void pagarTiquete(Tiquete t){
+        if (t == null) {
+            vista.mostrarMensaje("No hay tiquete para pagar.");
+            return;
+        }
         if (!verificarTiquete(t)) {
             vista.mostrarMensaje("El Tiquete con ID " + t.getIdTiquete() + " no se encuentra registrado.");
             return;
@@ -197,6 +193,29 @@ public class Controlador {
         return t; 
     }
     return null;
+    }
+    
+    public void simularLlegadas() throws Exception {
+        ExecutorService puertas = Executors.newFixedThreadPool(3);
+        ArrayList<Future<Tiquete>> resultados = new ArrayList<>();
+
+        System.out.println("Se hace la prueba con 6 vehiculos habiendo únicamente 2 espacios.");
+        for (int i = 1; i <= 6; i++) {
+            int id = 100 + i;
+            Usuario u = new Estudiante(3, "Ingenieria", "Pregrado", "Estudiante " + id, "300", "@", "ID" + id);
+            Vehiculo v = new Motocicleta(150, "SIM-" + id, "Yamaha", "Rojo");
+            resultados.add(puertas.submit(() -> registrarEntrada(id, u, v)));
+        }
+
+        System.out.println("[Registramos salida de los vehiculos que entraron]");
+        for (Future<Tiquete> resultado : resultados) {
+            Tiquete t = resultado.get(); 
+            if (t != null) {
+                puertas.execute(() -> registrarSalida(t));
+            }
+        }
+
+        puertas.shutdown();
     }
       
 }

@@ -13,11 +13,12 @@ import controlador.*;
  */
 public class ControlParqueadero {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Vista vista = new Vista();
         Parqueadero pUDC = new Parqueadero("UDC", 5000, 2);
         Controlador controlador = new Controlador(pUDC, vista);
         ////
         controlador.cargarSistema();
+        controlador.simularLlegadas(); 
     }
 }
